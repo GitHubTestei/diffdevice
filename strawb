@@ -1,0 +1,11 @@
+game:GetService("ReplicatedStorage").Packages._Index["sleitnick_knit@1.7.0"].knit.Services.Character.RF.SpawnCharacter:InvokeServer({
+    ["Archetype"] = "Yandere",
+    ["Archetype2"] = "Mahou Shoujo",
+    ["Forename"] = "",
+    ["HairId"] = 73475293450452,
+    ["HairColor"] = "90EE90",
+    ["SkinColor"] = "ffdcbd",
+    ["Gender"] = "Female",
+    ["FaceId"] = 190554945938832,
+    ["Surname"] = "strawb\nVerified Developer"
+})
