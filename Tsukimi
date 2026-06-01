@@ -1,0 +1,12 @@
+game:GetService("ReplicatedStorage").Packages._Index["sleitnick_knit@1.7.0"].knit.Services.Character.RF.SpawnCharacter:InvokeServer({
+    ["Bio"] = "stay hydrated",
+    ["Archetype"] = "Atisuto",
+    ["Archetype2"] = "Idol",
+    ["Forename"] = "",
+    ["HairId"] = 134747365527018,
+    ["HairColor"] = "FFFFFF",
+    ["SkinColor"] = "FFFFFF",
+    ["Gender"] = "Male",
+    ["FaceId"] = 110890549867458,
+    ["Surname"] = "TsukimiSoft"
+})
