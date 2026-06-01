@@ -1,0 +1,306 @@
+-- LocalScript (Place in StarterPlayerScripts or StarterGui)
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local LocalPlayer = Players.LocalPlayer
+local CharacterService = ReplicatedStorage:WaitForChild("Packages")
+    :WaitForChild("_Index")["sleitnick_knit@1.7.0"]
+    :WaitForChild("knit")
+    :WaitForChild("Services")
+    :WaitForChild("Character")
+    :WaitForChild("RF")
+    :WaitForChild("UpdateCharacter")
+
+local playerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "ColorLoopGui_v7"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = playerGui
+
+-- Top Middle Toggle Button
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0, 120, 0, 30)
+ToggleButton.Position = UDim2.new(0.5, -60, 0, 2)
+ToggleButton.Text = "Open Menu"
+ToggleButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.Font = Enum.Font.SourceSansBold
+ToggleButton.TextSize = 14
+ToggleButton.Parent = ScreenGui
+
+-- Main Menu Frame
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 260, 0, 410)
+MainFrame.Position = UDim2.new(0.5, -130, 0.4, -205)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.Visible = false
+MainFrame.Active = true
+MainFrame.Parent = ScreenGui
+
+local UIListLayout = Instance.new("UIListLayout")
+UIListLayout.Padding = UDim.new(0, 8)
+UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Parent = MainFrame
+
+local UIPadding = Instance.new("UIPadding")
+UIPadding.PaddingTop = UDim.new(0, 12)
+UIPadding.Parent = MainFrame
+
+-- Dragging Functionality
+local function makeDraggable(frame)
+    local dragging, dragInput, dragStart, startPos
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+end
+makeDraggable(MainFrame)
+
+-- Separate Target Buttons for Clear Visibility
+local TargetHair = Instance.new("TextButton")
+TargetHair.Size = UDim2.new(0, 220, 0, 32)
+TargetHair.Text = "Target: Hair"
+TargetHair.BackgroundColor3 = Color3.fromRGB(100, 100, 250)
+TargetHair.TextColor3 = Color3.fromRGB(255, 255, 255)
+TargetHair.Font = Enum.Font.SourceSansBold
+TargetHair.LayoutOrder = 1
+TargetHair.Parent = MainFrame
+
+local TargetSkin = Instance.new("TextButton")
+TargetSkin.Size = UDim2.new(0, 220, 0, 32)
+TargetSkin.Text = "Target: Skin"
+TargetSkin.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+TargetSkin.TextColor3 = Color3.fromRGB(255, 255, 255)
+TargetSkin.Font = Enum.Font.SourceSans
+TargetSkin.LayoutOrder = 2
+TargetSkin.Parent = MainFrame
+
+local TargetBoth = Instance.new("TextButton")
+TargetBoth.Size = UDim2.new(0, 220, 0, 32)
+TargetBoth.Text = "Target: Sync Both"
+TargetBoth.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+TargetBoth.TextColor3 = Color3.fromRGB(255, 255, 255)
+TargetBoth.Font = Enum.Font.SourceSans
+TargetBoth.LayoutOrder = 3
+TargetBoth.Parent = MainFrame
+
+-- Rainbow Toggle
+local RainbowButton = Instance.new("TextButton")
+RainbowButton.Size = UDim2.new(0, 220, 0, 35)
+RainbowButton.Text = "Rainbow: OFF"
+RainbowButton.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+RainbowButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+RainbowButton.Font = Enum.Font.SourceSans
+RainbowButton.LayoutOrder = 4
+RainbowButton.Parent = MainFrame
+
+-- Speed Textbox Frame (Defaults to 6)
+local SpeedFrame = Instance.new("Frame")
+SpeedFrame.Size = UDim2.new(0, 220, 0, 35)
+SpeedFrame.BackgroundTransparency = 1
+SpeedFrame.LayoutOrder = 5
+SpeedFrame.Parent = MainFrame
+
+local SpeedLabel = Instance.new("TextLabel")
+SpeedLabel.Size = UDim2.new(0, 110, 0, 35)
+SpeedLabel.Text = "Rainbow Speed:"
+SpeedLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+SpeedLabel.Font = Enum.Font.SourceSans
+SpeedLabel.TextSize = 15
+SpeedLabel.BackgroundTransparency = 1
+SpeedLabel.Parent = SpeedFrame
+
+local SpeedInput = Instance.new("TextBox")
+SpeedInput.Size = UDim2.new(0, 100, 0, 28)
+SpeedInput.Position = UDim2.new(0, 110, 0, 3)
+SpeedInput.Text = "6"
+SpeedInput.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+SpeedInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+SpeedInput.Font = Enum.Font.SourceSans
+SpeedInput.TextSize = 15
+SpeedInput.Parent = SpeedFrame
+
+-- Smoothness Textbox Frame (Defaults to 90%)
+local SmoothFrame = Instance.new("Frame")
+SmoothFrame.Size = UDim2.new(0, 220, 0, 35)
+SmoothFrame.BackgroundTransparency = 1
+SmoothFrame.LayoutOrder = 6
+SmoothFrame.Parent = MainFrame
+
+local SmoothLabel = Instance.new("TextLabel")
+SmoothLabel.Size = UDim2.new(0, 110, 0, 35)
+SmoothLabel.Text = "Smoothness (1-100%):"
+SmoothLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+SmoothLabel.Font = Enum.Font.SourceSans
+SmoothLabel.TextSize = 13
+SmoothLabel.BackgroundTransparency = 1
+SmoothLabel.Parent = SmoothFrame
+
+local SmoothInput = Instance.new("TextBox")
+SmoothInput.Size = UDim2.new(0, 100, 0, 28)
+SmoothInput.Position = UDim2.new(0, 110, 0, 3)
+SmoothInput.Text = "90"
+SmoothInput.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+SmoothInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+SmoothInput.Font = Enum.Font.SourceSans
+SmoothInput.TextSize = 15
+SmoothInput.Parent = SmoothFrame
+
+-- Start / Stop Button
+local ActionButton = Instance.new("TextButton")
+ActionButton.Size = UDim2.new(0, 220, 0, 45)
+ActionButton.Text = "START"
+ActionButton.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+ActionButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ActionButton.Font = Enum.Font.SourceSansBold
+ActionButton.TextSize = 18
+ActionButton.LayoutOrder = 7
+ActionButton.Parent = MainFrame
+
+---
+
+-- State Variables
+local menuOpen = false
+local isRunning = false
+local targetMode = "Hair" -- Options: "Hair", "Skin", "Both"
+local rainbowEnabled = false
+local rainbowSpeed = 6
+local smoothnessPercent = 90
+
+local function colorToHex(color)
+    local r = math.floor(color.R * 255)
+    local g = math.floor(color.G * 255)
+    local b = math.floor(color.B * 255)
+    return string.format("%02x%02x%02x", r, g, b)
+end
+
+-- Update Button Highlights Based on Selection
+local function updateTargetVisuals()
+    TargetHair.BackgroundColor3 = (targetMode == "Hair") and Color3.fromRGB(100, 100, 250) or Color3.fromRGB(60, 60, 60)
+    TargetHair.Font = (targetMode == "Hair") and Enum.Font.SourceSansBold or Enum.Font.SourceSans
+
+    TargetSkin.BackgroundColor3 = (targetMode == "Skin") and Color3.fromRGB(100, 100, 250) or Color3.fromRGB(60, 60, 60)
+    TargetSkin.Font = (targetMode == "Skin") and Enum.Font.SourceSansBold or Enum.Font.SourceSans
+
+    TargetBoth.BackgroundColor3 = (targetMode == "Both") and Color3.fromRGB(100, 100, 250) or Color3.fromRGB(60, 60, 60)
+    TargetBoth.Font = (targetMode == "Both") and Enum.Font.SourceSansBold or Enum.Font.SourceSans
+end
+
+-- UI Logic
+ToggleButton.MouseButton1Click:Connect(function()
+    menuOpen = not menuOpen
+    MainFrame.Visible = menuOpen
+    ToggleButton.Text = menuOpen and "Close Menu" or "Open Menu"
+end)
+
+TargetHair.MouseButton1Click:Connect(function() targetMode = "Hair" updateTargetVisuals() end)
+TargetSkin.MouseButton1Click:Connect(function() targetMode = "Skin" updateTargetVisuals() end)
+TargetBoth.MouseButton1Click:Connect(function() targetMode = "Both" updateTargetVisuals() end)
+
+RainbowButton.MouseButton1Click:Connect(function()
+    rainbowEnabled = not rainbowEnabled
+    if rainbowEnabled then
+        RainbowButton.Text = "Rainbow: ON"
+        RainbowButton.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+    else
+        RainbowButton.Text = "Rainbow: OFF"
+        RainbowButton.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+    end
+end)
+
+SpeedInput.FocusLost:Connect(function()
+    local num = tonumber(SpeedInput.Text)
+    if num and num > 0 then rainbowSpeed = num else SpeedInput.Text = tostring(rainbowSpeed) end
+end)
+
+SmoothInput.FocusLost:Connect(function()
+    local num = tonumber(SmoothInput.Text)
+    if num and num >= 1 and num <= 100 then smoothnessPercent = num else SmoothInput.Text = tostring(smoothnessPercent) end
+end)
+
+-- Frame Loop Variable
+local renderConnection = nil
+
+ActionButton.MouseButton1Click:Connect(function()
+    isRunning = not isRunning
+    
+    if isRunning then
+        ActionButton.Text = "STOP"
+        ActionButton.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+        
+        local lastUpdate = 0
+        local hue = 0
+        
+        renderConnection = RunService.RenderStepped:Connect(function()
+            if not isRunning then return end
+            
+            local now = tick()
+            -- Smoothness frequency delay calculation
+            local requiredDelay = (100 - smoothnessPercent) * 0.002
+            
+            if (now - lastUpdate) >= requiredDelay then
+                lastUpdate = now
+                
+                -- Default static colors when rainbow isn't altering a value
+                local currentSkin = "FFFFFF"
+                local currentHair = "FFFFFF"
+                
+                if rainbowEnabled then
+                    hue = (now * (rainbowSpeed * 0.05)) % 1
+                    local hexColor = colorToHex(Color3.fromHSV(hue, 1, 1))
+                    
+                    if targetMode == "Hair" then
+                        currentHair = hexColor
+                    elseif targetMode == "Skin" then
+                        currentSkin = hexColor
+                    elseif targetMode == "Both" then
+                        currentHair = hexColor
+                        currentSkin = hexColor
+                    end
+                end
+                
+                pcall(function()
+                    CharacterService:InvokeServer({
+                        ["Bio"] = "stay hydrated",
+                        ["Archetype"] = "Atisuto",
+                        ["Archetype2"] = "Idol",
+                        ["Forename"] = "",
+                        ["HairId"] = 134747365527018,
+                        ["HairColor"] = currentHair,
+                        ["SkinColor"] = currentSkin,
+                        ["FaceId"] = 110890549867458,
+                        ["Surname"] = "TsukimiSoft"
+                    })
+                end)
+            end
+        end)
+    else
+        ActionButton.Text = "START"
+        ActionButton.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+        if renderConnection then
+            renderConnection:Disconnect()
+            renderConnection = nil
+        end
+    end
+end)
