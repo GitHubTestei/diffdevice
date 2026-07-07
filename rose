@@ -1,0 +1,16 @@
+game:GetService("ReplicatedStorage").Packages._Index["sleitnick_knit@1.7.0"].knit.Services.Character.RF.SpawnCharacter:InvokeServer({
+    ["Bio"] = "oop",
+    ["Archetype"] = "Atisuto",
+    ["Archetype2"] = "Kamidere",
+    ["Accessory1"] = 93747270584842,
+    ["Accessory2"] = 130992186042541, 
+    ["Accessory3"] = 105583286254735, 
+    ["Forename"] = "",
+    ["HairId"] = 18452562462,
+    ["HairId2"] = ,
+    ["HairColor"] = "FAF0BE",
+    ["SkinColor"] = "ba8560",
+    ["Gender"] = "Female",
+    ["FaceId"] = 184481068141963,
+    ["Surname"] = "rosewood"
+})
